@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: ["**"]
   pull_request:
   # Redeploy by hand, e.g. after changing the Pages settings.
   workflow_dispatch:
@@ -14,6 +14,10 @@ jobs:
   check:
     name: Type check, lint, format, test, build
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: ci-check-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
